@@ -1,0 +1,16 @@
+.Square {
+  box-sizing: border-box;
+  color: white;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26px;
+  transform-origin: center;
+  &.dark {
+    background-color: #7D574B;
+  }
+  &.light {
+    background-color: #FCD3A4;
+  }
+}

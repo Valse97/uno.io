@@ -1,0 +1,30 @@
+.Login {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+  .form-wrapper {
+    width: 200px;
+  }
+  label {
+    font-size: 14px;
+  }
+  input {
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  button {
+    @include button(100%);
+  }
+  span {
+    color: royalblue;
+    cursor: pointer;
+  }
+  .error {
+    color: red;
+  }
+}

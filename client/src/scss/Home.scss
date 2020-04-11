@@ -1,0 +1,6 @@
+.Home {
+  padding: 30px;
+  button {
+    @include button(250px);
+  }
+}
