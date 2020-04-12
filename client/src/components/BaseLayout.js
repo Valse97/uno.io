@@ -8,7 +8,7 @@ const BaseLayout = (props) => {
   } = props;
   return (
     <Fragment>
-      <NavBar />
+      {/* <NavBar /> */}
       {children}
     </Fragment>
   );

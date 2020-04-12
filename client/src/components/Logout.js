@@ -8,6 +8,7 @@ class Logout extends Component {
   }
 
   logout = () => {
+    localStorage.removeItem('token');
     this.props.logout();
   }
 

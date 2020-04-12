@@ -1,96 +1,43 @@
 import React, { Component, Fragment } from 'react';
 
-import Helpers from '../assets/helpers';
-
-import Piece from './Piece';
-import Square from './Square';
-
-const helpers = new Helpers();
-
-const {
-  findPieceBySquare,
-  findSquareByPiece,
-} = helpers;
+import Card from './Card';
 
 class Board extends Component {
   state = {}
 
-  render() {    
+  render() {
     const {
-      activePlayerColor,
-      kill,
-      movePiece,
-      pieces,
-      selectPiece,
-      squares,
-      squareWidth,
+      trash,
+      chooseCard,
+      drawCard,
     } = this.props;
-
-    const boardWidth = squareWidth * 8;
 
     return (
       <Fragment>
         <div
           className="Board"
-          style={{
-            height: boardWidth,
-            width: boardWidth,
-          }}
+        // style={{
+        //   height: boardWidth,
+        //   width: boardWidth,
+        // }}
         >
+          <Card
+            className="covered"
+            id={null}
+            key={null}
+            color={null}
+            type={null}
+            reversed={true}
+            drawCard={drawCard}
+          />
 
-          {pieces.map((piece, index) => {
-            // find the square that the piece is on
-            const foundSquare = findSquareByPiece(pieces, squares, piece);
-
-            if (piece.alive && foundSquare) {
-              return (
-                <Piece
-                  key={index}
-                  activePlayerColor={activePlayerColor}
-                  foundSquare={foundSquare}
-                  kill={kill}
-                  top={foundSquare.top}
-                  left={foundSquare.left}
-                  movePiece={movePiece}
-                  piece={piece}
-                  selected={piece.selected}
-                  selectPiece={selectPiece}
-                  width={squareWidth}
-                />
-              );
-            }
-          })}
-          {squares.map((square, index) => {
-            const {
-              available,
-              column,
-              top,
-              left,
-              row,
-            } = square;
-
-            // mark a square as occupied
-            const foundPiece = findPieceBySquare(squares, pieces, square);
-            square.piece = foundPiece;
-
-            const evenRow = top % (squareWidth * 2) === 0;
-            const evenColumn = left % (squareWidth * 2) === 0;
-            const dark = evenRow !== evenColumn;
-            return (
-              <Square
-                key={index}
-                activePlayerColor={activePlayerColor}
-                available={available}
-                column={column}
-                dark={dark}
-                left={left}
-                movePiece={movePiece}
-                row={row}
-                top={top}
-                width={squareWidth}
-              />
-            );
-          })}
+          <Card
+            id={trash.cardId}
+            key={trash.cardId}
+            color={trash.cardColor}
+            type={trash.cardType}
+            chooseCard={()=>{}}
+          />
         </div>
       </Fragment>
     );

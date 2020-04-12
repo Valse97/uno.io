@@ -16,9 +16,9 @@ const NavBar = (props) => {
         <NavLink to="/">
           Home
         </NavLink>
-        <NavLink to="/game">
+        {/* <NavLink to="/game">
           Single Player
-        </NavLink>
+        </NavLink> */}
       </div>
       <div>
         <NavLink to={authPath}>

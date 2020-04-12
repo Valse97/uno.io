@@ -12,7 +12,7 @@ class Home extends Component {
     error: null,
     gameId: null,
     waiting: false,
-    whiteId: null,
+    games: [],
   }
 
   componentDidMount() {
@@ -22,9 +22,10 @@ class Home extends Component {
       console.log('CONNECTED');
     });
 
-    // TODO: this is a bug
-    this.socket.on('START_GAME', (game) => {
-      this.receiveGame(game);
+    this.socket.on('UPDATE_GAMES', (games) => {
+      this.setState({
+        games: games
+      });
     });
   }
 
@@ -33,41 +34,58 @@ class Home extends Component {
     this.socket.close();
   }
 
+  restoreGame = () => {
+    //TODO:
+    const { user } = this.props;
+    const data = {
+      userId: user.id,
+      username: user.username,
+    };
+    this.socket.emit('RECOVER_GAME', data, (recover) => {
+      if (recover == true) {
+
+      }
+    });
+  }
+
   createGame = () => {
     const { user } = this.props;
     const data = {
       userId: user.id,
       username: user.username,
     };
-    this.socket.emit('CREATE_GAME', data);
+    this.socket.emit('CREATE_ROOM', data, (game) => {
+      this.setState({
+        gameId: game.id,
+      });
+    });
     this.setState({ waiting: true }, () => {
-      setTimeout(() => {
-        this.socket.on('RECEIVE_GAME', (game) => {
-          this.receiveGame(game);
-        });
-      }, 500);
-      this.stopWaiting = setTimeout(() => {
-        this.socket.removeListener('RECEIVE_GAME');
-        this.setState({
-          error: 'Could not find an opponent at this time',
-          waiting: false,
-        });
-        setTimeout(() => {
-          this.setState({ error: null });
-        }, 2000);
-      }, 10000);
+      //   setTimeout(() => {
+      //     this.socket.on('RECEIVE_GAME', (game) => {
+      //       this.receiveGame(game);
+      //     });
+      //   }, 500);
+      //   // this.stopWaiting = setTimeout(() => {
+      //   //   this.socket.removeListener('RECEIVE_GAME');
+      //   //   this.setState({
+      //   //     error: 'Could not find an opponent at this time',
+      //   //     waiting: false,
+      //   //   });
+      //   //   setTimeout(() => {
+      //   //     this.setState({ error: null });
+      //   //   }, 2000);
+      //   // }, 10000);
     });
   }
 
-  receiveGame = (game) => {
-    clearTimeout(this.stopWaiting);
+  joinGame = (game) => {
+    // clearTimeout(this.stopWaiting);
     this.setState({ waiting: false }, () => {
-      this.socket.removeListener('RECEIVE_GAME');
-      this.socket.emit('JOIN_GAME', game);
+      // this.socket.removeListener('RECEIVE_GAME');
+      // this.socket.emit('JOIN_GAME', game);
     });
     this.setState({
       gameId: game.id,
-      whiteId: game.userId,
     });
   }
 
@@ -76,27 +94,34 @@ class Home extends Component {
       error,
       gameId,
       waiting,
-      whiteId,
+      games,
     } = this.state;
 
     const { user } = this.props;
 
     const redirect = gameId ?
-      <Redirect to={`/game/${gameId}?start_id=${whiteId}`} />
+      <Redirect to={`/game/${gameId}`} />
       :
       null;
 
-    const buttonText = waiting ? 'Looking for Opponent' : 'Find Opponent';
+    const buttonText = waiting ? 'Create room' : 'Create room';
     const errorMessage = error ?
       (
         <p style={{ color: 'red' }}>{error}</p>
       ) : null;
 
+    const gamesLi = games.map((game) =>
+      game.state == data.gameState.Open ?
+        (<li key={game.id} onClick={() => { this.joinGame(game) }}>{game.username} - {game.users.length} {game.users.length == 1 ? 'user' : 'users'}</li>)
+        :
+        (<li key={game.id}>PLAYING: {game.username} - {game.users.length} {game.users.length == 1 ? 'user' : 'users'}</li>)
+    );
+
     return (
       <div className="Home">
         {redirect}
         <h1>Welcome, {user.username}</h1>
-        <p>To play an opponent, click below. Or to play locally, click &quot;Single Player&quot; in the navigation bar above.</p>
+        {/* <p>To play an opponent, click below. Or to play locally, click &quot;Single Player&quot; in the navigation bar above.</p> */}
         <button
           disabled={waiting}
           onClick={this.createGame}
@@ -104,6 +129,11 @@ class Home extends Component {
           {buttonText}
         </button>
         {errorMessage}
+
+        <div>
+          <h5>ROOMS</h5>
+          <ul>{gamesLi}</ul>
+        </div>
       </div>
     );
   }

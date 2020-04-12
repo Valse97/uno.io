@@ -7,9 +7,11 @@ var connection = mysql.createPool({
   database: 'uno'
 });
 
-const dataStore = require('../assets/store');
+var users = [];
 
-const { dbConfig } = dataStore;
+connection.query(`select * from users`, (error, results) => {
+  users = results;
+});
 
 const checkPassword = function (password, passwordHash) {
   return bcrypt.compareSync(password, passwordHash);
@@ -42,4 +44,8 @@ const checkUser = function (username, password, done) {
   // });
 };
 
-module.exports = { checkUser };
+const getById = function(id){
+  return users.find((_user) => _user.id === id);
+}
+
+module.exports = { checkUser,getById };

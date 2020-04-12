@@ -1,16 +1,18 @@
+const passportJWT = require("passport-jwt");
+
+const ExtractJWT = passportJWT.ExtractJwt;
+
 const LocalStrategy = require('passport-local').Strategy;
+const JWTStrategy   = passportJWT.Strategy;
 // const FacebookStrategy = require('passport-facebook').Strategy;
 var mysql = require('mysql');
 var connection = mysql.createPool({
-  connectionLimit : 10,
+  connectionLimit: 10,
   host: 'localhost',
   user: 'root',
   password: '',
   database: 'uno'
 });
-const dataStore = require('./assets/store');
-
-const { dbConfig } = dataStore;
 
 const User = require('./models/user');
 
@@ -32,7 +34,20 @@ function configure(passport) {
   };
   passport.use(new LocalStrategy({
     usernameField: 'username',
-  }, strategyFunc));
+  }, strategyFunc))
+  // passport.use(new JWTStrategy({
+  //   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  //   secretOrKey: 'unoPassword!'
+  // },
+  //   function (jwtPayload, cb) {
+  //     try {
+  //       var user = User.getById(jwtPayload.id)
+  //       return cb(null, user);
+  //     } catch (e) {
+  //       return cb(err);
+  //     };
+  //   }
+  // ));
   passport.serializeUser((user, done) => {
     console.log('serializeUser', user);
     done(null, user);
@@ -47,16 +62,16 @@ function configure(passport) {
     //     connection.release();
     //     throw error;
     //   } else {
-        const sql = `SELECT * FROM users WHERE id = ${userId}`;
-        connection.query(sql, (error, results) => {
-          if (error) {
-            throw error;
-          } else {
-            const user = results[0];
-            done(null, user);
-          }
-          // connection.release();
-        });
+    const sql = `SELECT * FROM users WHERE id = ${userId}`;
+    connection.query(sql, (error, results) => {
+      if (error) {
+        throw error;
+      } else {
+        const user = results[0];
+        done(null, user);
+      }
+      // connection.release();
+    });
     //   }
     // });
   });

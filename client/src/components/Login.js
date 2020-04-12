@@ -8,6 +8,7 @@ const authAPI = new AuthAPI();
 
 const {
   login,
+  tokenLogin
 } = authAPI;
 
 class Login extends Component {
@@ -18,6 +19,15 @@ class Login extends Component {
     password: '',
     username: '',
   };
+
+  componentDidMount() {
+    var localToken = localStorage.getItem('token');
+    if (localToken != undefined && localToken != null && localToken != '') {
+      this.setState({ error: null, signingIn: true }, () => {
+        tokenLogin(localToken, this.handleRes);
+      });
+    }
+  }
 
   handleChange = (evt, key) => {
     const o = {};
@@ -32,6 +42,7 @@ class Login extends Component {
           this.signIn();
         });
       } else if (res.token) {
+        localStorage.setItem('token', res.token);
         this.setUser(res);
       } else if (res.error) {
         if (res.error.detail) {
@@ -53,9 +64,9 @@ class Login extends Component {
     });
   }
 
-  toggleAuth = () => {
-    this.setState({ signingUp: !this.state.signingUp });
-  }
+  // toggleAuth = () => {
+  //   this.setState({ signingUp: !this.state.signingUp });
+  // }
 
   render() {
     const {
@@ -69,6 +80,8 @@ class Login extends Component {
       token,
     } = this.props;
 
+    const gameId = this.props.match.params.id;
+
     const switchMessage = this.state.signingUp ?
       (
         <p>Have an account? <span onClick={this.toggleAuth}>Login</span></p>
@@ -78,9 +91,10 @@ class Login extends Component {
         <p>Need an account? <span onClick={this.toggleAuth}>Sign Up</span></p>
       );
 
+    const pathname = gameId == undefined ? "/" : ("/game/" + gameId);
     const authRedirect = token ?
       <Redirect to={{
-        pathname: "/",
+        pathname: pathname,
         state: { from: this.props.location }
       }} />
       :

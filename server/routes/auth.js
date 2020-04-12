@@ -40,7 +40,7 @@ function generateToken(req, res, next) {
   const sig = {
     id: req.user.id,
   };
-  const secret = 'server secret';
+  const secret = 'unoPassword!';
   const expiration = {
     expiresIn: '30 days',
   };
@@ -55,13 +55,29 @@ function respond(req, res) {
   });
 }
 
-// router.post('/login', (req, res) => {
-//   console.log('HELLO FROM THE LOGIN ROUTE');
-// },)
-
 router.post('/login', passport.authenticate('local', {
   session: false,
 }), serialize, generateToken, respond);
+
+router.post('/token', (req, res) => {
+  const {
+    token
+  } = req.body;
+  const secret = 'unoPassword!';
+
+  jwt.verify(token, secret, function(err, decoded) {
+    console.log(decoded) // bar
+
+    var user = User.getById(decoded.id);
+  
+    res.status(200).json({
+      user: user,
+      token: token,
+    });
+  });
+}, passport.authenticate('local', {
+  session: false,
+}));
 
 router.post('/signup', (req, res) => {
   const {
@@ -78,30 +94,30 @@ router.post('/signup', (req, res) => {
   //     res.json({ error });
   //     connection.release();
   //   } else {
-      const sql = `
+  const sql = `
       INSERT INTO users 
       (username,password,points,games,wins,drawed_cards,played_cards,time_played)
           VALUES ('${username}', '${passwordHash}',0,0,0,0,0,0);
         `;
-      connection.query(sql, (error, results) => {
+  connection.query(sql, (error, results) => {
+    if (error) {
+      console.error('SIGN UP ERROR', error);
+      res.json({ error });
+      // connection.release();
+    } else {
+      connection.query(`SELECT * FROM users WHERE username = '${username}'`, (error, results) => {
         if (error) {
           console.error('SIGN UP ERROR', error);
           res.json({ error });
-          // connection.release();
         } else {
-          connection.query(`SELECT * FROM users WHERE username = '${username}'`, (error, results) => {
-            if (error) {
-              console.error('SIGN UP ERROR', error);
-              res.json({ error });
-            } else {
-              const user = results[0];
-              req.user = user;
-              res.json(user);
-              // connection.release();
-            }
-          });
+          const user = results[0];
+          req.user = user;
+          res.json(user);
+          // connection.release();
         }
       });
+    }
+  });
   //   }
   // });
 }, passport.authenticate('local', {

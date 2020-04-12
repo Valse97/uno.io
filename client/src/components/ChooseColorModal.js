@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ExchangeModal = (props) => {
+const ChooseColorModal = (props) => {
   const {
     exchange,
     message,
@@ -34,4 +34,4 @@ const ExchangeModal = (props) => {
   );
 };
 
-export default ExchangeModal;
+export default ChooseColorModal;

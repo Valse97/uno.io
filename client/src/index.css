@@ -7,10 +7,133 @@ body {
 .hide {
   display: none; }
 
-.Board {
+  .UserLegenda{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  
+  .UserLegenda tr{
+  }
+  .UserLegenda tr.highlight td:first-child {
+    background: #ffff7e;
+  }
+  
+  .UserLegenda tr td:first-child{
+    padding: 12px;
+  }
+  
+  .UserLegenda tr td:nth-child(2){
+    padding: 2px;
+    width: 100%;
+  }
+  
+  .Board {
+    position: fixed;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    display: flex;
+}
+
+.changeTurn{
+  position: fixed;
+  bottom: 26%;
+}
+
+.Board .CardContainer {
+  margin-right: 4%;
+}
+.HandContainer {
+  overflow: auto;
+  width: 100vw;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  margin: auto;
+  left: 50%;
+  transform: translate(-50%, 0);
+  max-width: 100%;
+}
+  .Hand {
+    width: 100%;
+    min-width: max-content;
+}
+.Hand:not(.canPlay) {
+  opacity: 0.7;
+}
+
+.center-table {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+    .center-table > div {
+        display: inline-block;
+        padding: 3px;
+    }
+    .CardContainer{
+      width: 80px;
+      display: inline-block;
+      margin: 1px 2px;
+      margin-right: -4%;
+    }
+.Card {
+    border-radius: 5px;
+    background-color: red;
+    position: relative;
+    width: 100%;
+    padding-top: 150%;
+    border: 1px solid black;
+}
+.Card.covered .top-left{
+
+}
+
+    .Card .center {
+      display: none;
+        font-size: 16px;
+        position: absolute;
+    }
+
+    .Card .top-left {
+      text-align: left;
+      position: absolute;
+      top: 5%;
+      left: 10%;
+      font-size: 24px;
+    }
+
+    
+    .CardContainer.small{
+      width: 22px;
+      margin-right: 2px;
+    }
+    .CardContainer.small .Card .top-left {
+      text-align: left;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 7px;
+    }
+
+.button-container {
+    position: fixed;
+    bottom: 105px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+/* .Board {
   border: 30px solid #382624;
   border-radius: 5px;
-  position: relative; }
+  position: relative; } */
 
 .Game {
   display: flex;
@@ -28,7 +151,7 @@ body {
 .Home {
   padding: 30px; }
   .Home button {
-    background-color: darkgreen;
+    background-color: #ad0000;
     color: white;
     font-size: 20px;
     width: 250px;
@@ -59,7 +182,7 @@ body {
     margin-bottom: 10px;
     width: 100%; }
   .Login button {
-    background-color: darkgreen;
+    background-color: #ad0000;
     color: white;
     font-size: 20px;
     width: 100%;
@@ -103,7 +226,7 @@ body {
 .NavBar {
   display: flex;
   justify-content: space-between;
-  background-color: darkgreen;
+  background-color: #ad0000;
   padding: 20px 60px; }
   .NavBar a {
     color: white;

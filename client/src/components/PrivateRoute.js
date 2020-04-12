@@ -14,10 +14,16 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         if (token) {
           component = <Component {...props} />;
         } else {
+          var pathname='/login';
+          const gameId = props.match.params.id;
+          if(gameId)
+          {
+            pathname+='/'+gameId;
+          }
           component = (
             <Redirect
               to={{
-                pathname: '/login',
+                pathname: pathname,
                 state: { from: props.location },
               }}
             />
