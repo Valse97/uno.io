@@ -9,7 +9,7 @@ const add = function () {
 const addUser = function (gameId, userId, username, socketId) {
     var game = getById(gameId);
     if(game){
-    game.users.push({ userId, username, socketId });
+    game.users.push({ userId, username, socketId, canDraw: true, uno: false });
     update(game);
     console.log('USER JOINED', gameId, userId);
     return game;
@@ -233,6 +233,14 @@ class Uno {
         }
         return false;
     }
+    userHasTheCard(cardId, playerId){
+        var ctx = this;
+        if (playerId === undefined || playerId === null) {
+            playerId = ctx.currentPlayer;
+        }
+        var userCards = ctx.users[playerId].cards;
+        return userCards.find(x => x.cardId === cardId);;
+    }
     canPlayAnyCard() {
         var ctx = this;
         var player = ctx.currentPlayer;
@@ -250,19 +258,37 @@ class Uno {
             playerId = ctx.currentPlayer;
         }
         if (ctx.canDraw) {
-            ctx.drawCardByPlayerId(playerId);//props.ctx.users[playerId].cards.push(getCardByDeck(props.G))
+            ctx.drawCardByPlayerId(playerId);
             ctx.canDraw = false;
+            if(!ctx.canPlayAnyCard()){
+                ctx.changeTurn();
+            }
         }
         return null;
     }
     drawCardByPlayerId(playerId) {
         var ctx = this;
         ctx.users[playerId].cards.push(ctx.getCardByDeck());
+        ctx.users[ctx.currentPlayer].uno = false;
+    }
+    drawCardsByPlayerId(playerId, numCards) {
+        var ctx = this;
+        for (var i = 0; i < numCards; i++) {
+            ctx.drawCardByPlayerId(playerId);
+        }
     }
     canPlayUserId(userId) {
         var ctx = this;
         var pos = ctx.users.findIndex((_user) => _user.userId === userId);
         return this.currentPlayer == pos;
+    }
+    callUno() {
+        var ctx = this;
+        if(cards.length == 1 && !ctx.users[ctx.currentPlayer].uno){
+            ctx.users[ctx.currentPlayer].uno = true;
+            return true;
+        }
+        return false;
     }
     playCard(cardId, cardColor) {
         var ctx = this;
@@ -273,24 +299,23 @@ class Uno {
             ctx.users[ctx.currentPlayer].cards = cards;
             ctx.trash.push(card);
             var nextPlayerId = ctx.getNextPlayerId();
+            if(cards.length == 1 && !ctx.users[ctx.currentPlayer].uno){
+                ctx.drawCardsByPlayerId(nextPlayerId, 4);
+            }
             switch (card.cardType) {
                 case ctx.cardType.Block:
                     ctx.changeTurn();
                     break;
                 case ctx.cardType.ChangeColor:
-                    //CAMBIA COLORE
+                    //CHANGE COLOR
                     ctx.trash[ctx.trash.length - 1].cardColor = cardColor;
                     break;
                 case ctx.cardType.Plus2:
-                    for (var i = 0; i < 2; i++) {
-                        ctx.drawCardByPlayerId(nextPlayerId);
-                    }
+                    ctx.drawCardsByPlayerId(nextPlayerId), 2;
                     break;
                 case ctx.cardType.Plus4:
-                    for (var i = 0; i < 4; i++) {
-                        ctx.drawCardByPlayerId(nextPlayerId);
-                    }
-                    //CAMBIA COLORE
+                    ctx.drawCardsByPlayerId(nextPlayerId, 4);
+                    //CHANGE COLOR
                     ctx.trash[ctx.trash.length - 1].cardColor = cardColor;
                     break;
                 case ctx.cardType.Switch:
@@ -318,6 +343,9 @@ class Uno {
     }
     changeTurn() {
         var ctx = this;
+        if(ctx.users[ctx.currentPlayer].cards.length > 1){
+            ctx.users[ctx.currentPlayer].uno = false;
+        }
         var _turnNum = ctx.getNextTurn();
         ctx.turnNum = _turnNum;
         ctx.canDraw = true;
