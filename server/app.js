@@ -137,9 +137,11 @@ io.on('connection', (socket) => {
     var userId = Game.getUserIdBySocketId(socket.id);
     if (game && userId) {
       if (game.canPlayUserId(userId)) {
-        game.playCard(cardId, color);
-        updateGame(game);
-        callback(true, "");
+        if (game.userHasTheCard(cardId)) {
+          game.playCard(cardId, color);
+          updateGame(game);
+          callback(true, "");
+        }
       } else {
         callback(false, "CANNOT PLAY");
       }
@@ -153,14 +155,30 @@ io.on('connection', (socket) => {
     var userId = Game.getUserIdBySocketId(socket.id);
     if (game && userId) {
       if (game.canPlayUserId(userId)) {
-        game.drawCard();
-        updateGame(game);
-        callback(true, "");
+          game.drawCard();
+          updateGame(game);
+          callback(true, "");
       } else {
         callback(false, "CANNOT PLAY");
       }
     } else {
       callback(false, "CANNOT PLAY");
+    }
+  });
+
+  socket.on('CALL_UNO', (callback) => {
+    var game = Game.getBySocketId(socket.id);
+    var userId = Game.getUserIdBySocketId(socket.id);
+    if (game && userId) {
+      if (game.canPlayUserId(userId)) {
+          game.callUno();
+          updateGame(game);
+          callback(true, "");
+      } else {
+        callback(false, "CANNOT CALL UNO");
+      }
+    } else {
+      callback(false, "CANNOT CALL UNO");
     }
   });
 
