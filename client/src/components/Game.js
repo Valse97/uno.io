@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 
 import data from '../assets/data';
 
+import ColorModal from './ColorModal';
 import Hand from './Hand';
 import Board from './Board';
 import UserLegenda from './UserLegenda';
@@ -21,16 +22,9 @@ class Game extends Component {
     ctx: null,
     users: [],
     success: true,
+    showModal: false,
+    modalCallback: null,
   }
-
-  cellStyle = {
-    width: '50px',
-    height: '75px',
-    lineHeight: '50px',
-    textAlign: 'center',
-    height: '100%',
-    lineHeight: '75px',
-  };
 
   componentDidMount() {
     const gameId = this.props.match.params.id;
@@ -91,13 +85,20 @@ class Game extends Component {
     });
   }
 
-  chooseCard = (cardId) => {
-    var changeColor = false;
+  openChooseColorModal = (modalCallback) => {
+    this.setState({ showModal: true, modalCallback });
+  }
+  closeChooseColorModal = () => {
+    this.setState({ showModal: false });
+  }
+
+  chooseCard = (cardId, color, type) => {
     console.log(cardId);
-    if (changeColor) {
-      //TODO: chooseColor
-      var color = data.cardColor.Red;
-      this.discardCard(cardId, color);
+    //CHANGE COLOR POPUP
+    if (color == data.cardColor.None) {
+      this.openChooseColorModal((newColor) => {
+        this.discardCard(cardId, newColor);
+      });
     } else {
       this.discardCard(cardId);
     }
@@ -128,8 +129,14 @@ class Game extends Component {
       gameId,
       ctx,
       users,
-      success
+      success,
+      showModal,
+      modalCallback,
     } = this.state;
+
+    const chooseColorModal = (<div className={'chooseModal'}>
+
+    </div>);
 
     const redirect = this.state.success ?
       null
@@ -146,6 +153,10 @@ class Game extends Component {
 
     return this.state.isPlaying && this.state.ctx != null ? (
       <div className="Game">
+        <ColorModal 
+        visible={this.state.showModal}
+        callback={this.state.modalCallback}
+        />
         {redirect}
         <div className="warning">
           {warning}

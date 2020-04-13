@@ -45,7 +45,7 @@ body {
 }
 
 .Board .CardContainer {
-  margin-right: 4%;
+  margin-right: 10px;
 }
 .HandContainer {
   overflow: auto;
@@ -78,10 +78,11 @@ body {
         padding: 3px;
     }
     .CardContainer{
+      font-family: 'Titillium Web', sans-serif;
       width: 80px;
       display: inline-block;
       margin: 1px 2px;
-      margin-right: -4%;
+      margin-right: -34px;
     }
 .Card {
     border-radius: 5px;

@@ -1,7 +1,7 @@
 // import card from './images/pieces/card.png';
 
 const devAPI = 'http://localhost:5000';
-const prodAPI = 'http://127.0.0.1:5000';
+const prodAPI = 'http://api.cardgame.uno';
 // const baseAPI = process.env.REACT_APP_ENV === 'development' ? devAPI : prodAPI;
 const baseAPI = prodAPI;
 
@@ -18,6 +18,33 @@ const data = {
     Blue: 2,
     Yellow: 3,
     Green: 4,
+  },
+  cardColorHex: {
+    0: {
+      backgroundTopLeft: '#ff0000',
+      backgroundBottomRight: '#ff0000',
+      textColor: '#ffffff',
+    },
+    1: {
+      backgroundTopLeft: '#ff0000',
+      backgroundBottomRight: '#ff0000',
+      textColor: '#ffffff',
+    },
+    2: {
+      backgroundTopLeft: '#ff0000',
+      backgroundBottomRight: '#ff0000',
+      textColor: '#ffffff',
+    },
+    4: {
+      backgroundTopLeft: '#ff0000',
+      backgroundBottomRight: '#ff0000',
+      textColor: '#ffffff',
+    },
+    5: {
+      backgroundTopLeft: '#ff0000',
+      backgroundBottomRight: '#ff0000',
+      textColor: '#ffffff',
+    },
   },
   cardType: {
     0: 0,

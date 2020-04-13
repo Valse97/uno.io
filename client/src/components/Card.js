@@ -13,12 +13,11 @@ class Card extends Component {
       drawCard,
     } = this.props;
 
-    if(reversed != undefined && reversed == true){
+    if (reversed != undefined && reversed == true) {
       drawCard();
-    }else{
-      chooseCard(id);
+    } else {
+      chooseCard(id,color,type);
     }
-    //TODO: GIOCARE CARTA
   }
 
   render() {
@@ -93,7 +92,7 @@ class Card extends Component {
     };
 
     var _size = size;
-    if(_size==undefined){
+    if (_size == undefined) {
       _size = 'normal';
     }
     const className = `CardContainer ${_size}`;

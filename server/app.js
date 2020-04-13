@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Origin', process.env.CLIENT);
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.header('Access-Control-Max-Age', 1728000);
@@ -122,7 +122,7 @@ io.on('connection', (socket) => {
       io.emit('GAME_START');
 
       updateGame(game);
-      
+
       io.emit('UPDATE_GAMES', Game.getAll());
       // } else {
       //   console.error("NOT ENOUGH USERS");
@@ -169,9 +169,13 @@ io.on('connection', (socket) => {
     var userId = Game.getUserIdBySocketId(socket.id);
     if (game && userId) {
       if (game.canPlayUserId(userId)) {
-        game.changeTurn();
-        updateGame(game);
-        callback(true, "");
+        if (!game.canDraw) {
+          game.changeTurn();
+          updateGame(game);
+          callback(true, "");
+        } else {
+          callback(false, "DRAW A CARD");
+        }
       } else {
         callback(false, "CANNOT PLAY");
       }

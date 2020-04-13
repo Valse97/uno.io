@@ -1,14 +1,15 @@
 {
-  "name": "chess",
+  "name": "uno",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "node-sass": "^4.9.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-modal": "^3.11.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.4",
+    "react-scripts": "2.1.8",
     "redux": "^4.0.0",
     "socket.io-client": "^2.1.0"
   },
@@ -20,11 +21,12 @@
     "sass": "node-sass src/scss/index.scss src/index.css --watch"
   },
   "devDependencies": {
-    "babel-preset-stage-0": "^6.24.1",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0"
-  }
+    "babel-preset-stage-0": "^6.24.1"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

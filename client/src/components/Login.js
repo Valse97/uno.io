@@ -64,9 +64,9 @@ class Login extends Component {
     });
   }
 
-  // toggleAuth = () => {
-  //   this.setState({ signingUp: !this.state.signingUp });
-  // }
+  toggleAuth = () => {
+    this.setState({ signingUp: !this.state.signingUp });
+  }
 
   render() {
     const {
