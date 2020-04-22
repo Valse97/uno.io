@@ -6,7 +6,6 @@ Demo here: http://cardgame.uno/login
 ## Known bugs
 - The first card doesn't affect the game
 - Can't re-join the game
-- Rooms with bots don't disappear
 
 ## Additional Rules to implement
   - Can stack +2 (The player can play a +2 instead of drawing card, the next player must draw 4 cards if he hasn't a +2)
